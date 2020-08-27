@@ -1,0 +1,12 @@
+version: '3.8'
+
+services: 
+    redis-server:
+        image: 'redis:latest'
+    # docker network create docker-compose-examples_default
+    # docker run --rm --network=docker-compose-examples_default redis:latest
+
+    flask-app:
+        build: ./flask-app
+        ports: 
+            - "5000:5000"

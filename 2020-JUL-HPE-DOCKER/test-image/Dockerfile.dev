@@ -1,0 +1,3 @@
+FROM alpine
+
+ENV JAVA_HOME=/usr/local/bin/java CLASSPATH=.:/usr/vinod/app/lib:/usr/local/lib

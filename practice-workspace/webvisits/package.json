@@ -1,0 +1,16 @@
+{
+  "name": "webvisits",
+  "version": "1.0.0",
+  "description": "node client app for redis",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "redis": "2.8.0"
+  }
+}

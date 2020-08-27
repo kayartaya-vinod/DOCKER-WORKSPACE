@@ -1,0 +1,18 @@
+{
+  "name": "simpleweb",
+  "version": "1.0.0",
+  "description": "Hello Webapp",
+  "repository": {
+    "git": "https://github.com/kayartaya-vinod"
+  },
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "Vinod <vinod@vinod.co>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*"
+  }
+}

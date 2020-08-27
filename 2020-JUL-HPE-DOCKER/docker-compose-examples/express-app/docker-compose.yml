@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+    express-app:
+        container_name: express-app
+        build: 
+            context: .
+        ports: 
+            - "8080:9000"
+        restart: always
