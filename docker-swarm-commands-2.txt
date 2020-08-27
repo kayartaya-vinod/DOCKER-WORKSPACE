@@ -1,0 +1,63 @@
+docker-machine create --driver virtualbox manager-node
+
+docker-machine ls
+
+docker-machine stop manager-node
+
+docker-machine kill manager-node
+
+docker-machine rm manager-node
+
+docker-machine create --driver virtualbox worker-node-1
+docker-machine create --driver virtualbox worker-node-2
+docker-machine create --driver virtualbox worker-node-3
+
+docker-machine ssh manager-node
+
+After the above command, we are in a command prompt/terminal of the
+manager-node virtual machine, where docker has alredy been installed
+
+You can issue any of the docker commands we have learnt so far.
+
+docker images --> list of all images (not from your host os)
+
+Inside the manager-node, (using ssh), issue this command to 
+initialize the docker swarm.
+
+docker swarm init --advertise-addr 192.168.99.105 
+
+Once initialized, this will give a command of the following sort:
+
+docker swarm join --token SWMTKN-1-0v2v51flkbs517bg8eikfcwznthz4w7anngl647l64t7qmgvdc-4pmdi9s0glf9oglqklzgj3n78 192.168.99.105:2377
+
+The above command must be run from each of the worker nodes (using ssh)
+
+For example,
+
+docker-machine ssh worker-node-1
+
+(once you are in..)
+
+docker swarm join --token SWMTKN-1-0v2v51flkbs517bg8eikfcwznthz4w7anngl647l64t7qmgvdc-4pmdi9s0glf9oglqklzgj3n78 192.168.99.105:2377
+
+--- Repeat this process for all the worker nodes
+
+
+service --> a container (replicated)
+
+docker service create -dp 80:80 --replicas 5 --name=nginx-server nginx:latest
+
+To see service id:
+docker service ls 
+
+To see the tasks (containers) in the service (replica set):
+docker service ps lhqvbs8d476y   
+
+If you shutdown a worker node using the docker-machine command:
+docker-machine stop worker-node-3
+
+Automatically, the containers running in this worker, will be created in another machine.
+
+docker service update --image nginx:alpine nginx-server
+
+docker service scale nginx-server=3

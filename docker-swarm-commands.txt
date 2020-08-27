@@ -1,0 +1,593 @@
+Last login: Tue Jul  7 13:27:12 on ttys007
+don-IV $ docker-machine -v
+zsh: command not found: docker-machine
+don-IV $ base=https://github.com/docker/machine/releases/download/v0.16.0 &&
+  curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/usr/local/bin/docker-machine &&
+  chmod +x /usr/local/bin/docker-machine
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   639  100   639    0     0    998      0 --:--:-- --:--:-- --:--:--   996
+100 32.0M  100 32.0M    0     0  2188k      0  0:00:14  0:00:14 --:--:-- 4334k
+don-IV $ docker-machine version
+docker-machine version 0.16.0, build 702c267f
+don-IV $ docker-machine create -driver virtualbox mgr1
+Creating CA: /Users/vinodkumar/.docker/machine/certs/ca.pem
+Creating client certificate: /Users/vinodkumar/.docker/machine/certs/cert.pem
+Running pre-create checks...
+(mgr1) Image cache directory does not exist, creating it at /Users/vinodkumar/.docker/machine/cache...
+(mgr1) No default Boot2Docker ISO found locally, downloading the latest release...
+(mgr1) Latest release for github.com/boot2docker/boot2docker is v19.03.12
+(mgr1) Downloading /Users/vinodkumar/.docker/machine/cache/boot2docker.iso from https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso...
+(mgr1) 0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100%
+Creating machine...
+(mgr1) Copying /Users/vinodkumar/.docker/machine/cache/boot2docker.iso to /Users/vinodkumar/.docker/machine/machines/mgr1/boot2docker.iso...
+(mgr1) Creating VirtualBox VM...
+(mgr1) Creating SSH key...
+(mgr1) Starting the VM...
+(mgr1) Check network to re-create if needed...
+(mgr1) Found a new host-only adapter: "vboxnet0"
+(mgr1) Waiting for an IP...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env mgr1
+don-IV $ docker-machine ls
+NAME   ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER      ERRORS
+mgr1   -        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.12   
+don-IV $ docker-machine create --driver virtualbox wrkr1
+Running pre-create checks...
+Creating machine...
+(wrkr1) Copying /Users/vinodkumar/.docker/machine/cache/boot2docker.iso to /Users/vinodkumar/.docker/machine/machines/wrkr1/boot2docker.iso...
+(wrkr1) Creating VirtualBox VM...
+(wrkr1) Creating SSH key...
+(wrkr1) Starting the VM...
+(wrkr1) Check network to re-create if needed...
+(wrkr1) Waiting for an IP...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env wrkr1
+don-IV $ docker-machine create --driver virtualbox wrkr2
+Running pre-create checks...
+Creating machine...
+(wrkr2) Copying /Users/vinodkumar/.docker/machine/cache/boot2docker.iso to /Users/vinodkumar/.docker/machine/machines/wrkr2/boot2docker.iso...
+(wrkr2) Creating VirtualBox VM...
+(wrkr2) Creating SSH key...
+(wrkr2) Starting the VM...
+(wrkr2) Check network to re-create if needed...
+(wrkr2) Waiting for an IP...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env wrkr2
+don-IV $ docker-machine create --driver virtualbox wrkr3
+Running pre-create checks...
+Creating machine...
+(wrkr3) Copying /Users/vinodkumar/.docker/machine/cache/boot2docker.iso to /Users/vinodkumar/.docker/machine/machines/wrkr3/boot2docker.iso...
+(wrkr3) Creating VirtualBox VM...
+(wrkr3) Creating SSH key...
+(wrkr3) Starting the VM...
+(wrkr3) Check network to re-create if needed...
+(wrkr3) Waiting for an IP...
+Waiting for machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting for SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the local machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env wrkr3
+don-IV $ docker-machine ip mgr1
+192.168.99.100
+don-IV $ docker-machine ssh mgr1
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+docker@mgr1:~$ docker swarm init --advertise-addr 192.168.99.100
+Swarm initialized: current node (nkrzsres16o5aqievz65n7yrr) is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-33ndanqg6p7r6wd4dpgzq3hbr5y4lvrneinfsgyhzubyoitmib-ecf6l9h8q65385ltvv099x1ur 192.168.99.100:2377
+
+To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.
+
+docker@mgr1:~$ docker node ls                                                                                    
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+nkrzsres16o5aqievz65n7yrr *   mgr1                Ready               Active              Leader              19.03.12
+docker@mgr1:~$ docker swarm join-token                                                                           
+"docker swarm join-token" requires exactly 1 argument.
+See 'docker swarm join-token --help'.
+
+Usage:  docker swarm join-token [OPTIONS] (worker|manager)
+
+Manage join tokens
+docker@mgr1:~$ docker swarm join-token woker                                                                                              
+unknown role woker
+docker@mgr1:~$ docker swarm join-token worker                                                                                             
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-33ndanqg6p7r6wd4dpgzq3hbr5y4lvrneinfsgyhzubyoitmib-ecf6l9h8q65385ltvv099x1ur 192.168.99.100:2377
+
+docker@mgr1:~$ exit                                                                                                                       
+logout
+don-IV $ docker-machine ssh wrkr1
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+<nqg6p7r6wd4dpgzq3hbr5y4lvrneinfsgyhzubyoitmib-ecf6l9h8q65385ltvv099x1ur 192.168.99.100:2377
+This node joined a swarm as a worker.
+docker@wrkr1:~$ exit                                                                                                                      
+logout
+don-IV $ docker-machine ssh wrkr2
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+<nqg6p7r6wd4dpgzq3hbr5y4lvrneinfsgyhzubyoitmib-ecf6l9h8q65385ltvv099x1ur 192.168.99.100:2377
+This node joined a swarm as a worker.
+docker@wrkr2:~$ exit                                                                                                                      
+logout
+don-IV $ docker-machine ssh wrkr3
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+<nqg6p7r6wd4dpgzq3hbr5y4lvrneinfsgyhzubyoitmib-ecf6l9h8q65385ltvv099x1ur 192.168.99.100:2377
+This node joined a swarm as a worker.
+docker@wrkr3:~$                                                                                                                           
+docker@wrkr3:~$ exit                                                  ur 192.168.99.100:2377
+logout
+don-IV $ docker-machine ssh mgr1 
+   ( '>')
+  /) TC (\   Core is distributed with ABSOLUTELY NO WARRANTY.
+ (/-_--_-\)           www.tinycorelinux.net
+
+docker@mgr1:~$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+nkrzsres16o5aqievz65n7yrr *   mgr1                Ready               Active              Leader              19.03.12
+vqvzlw84cn7jkmpjxmijh5ha9     wrkr1               Ready               Active                                  19.03.12
+zxrecsgm12cu3nhccbvxnvc9p     wrkr2               Ready               Active                                  19.03.12
+i9yvoiwtdcz8uc6rxstnrxung     wrkr3               Ready               Active                                  19.03.12
+docker@mgr1:~$ docker info                                                                                                                
+Client:
+ Debug Mode: false
+
+Server:
+ Containers: 0
+  Running: 0
+  Paused: 0
+  Stopped: 0
+ Images: 0
+ Server Version: 19.03.12
+ Storage Driver: overlay2
+  Backing Filesystem: extfs
+  Supports d_type: true
+  Native Overlay Diff: true
+ Logging Driver: json-file
+ Cgroup Driver: cgroupfs
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
+ Swarm: active
+  NodeID: nkrzsres16o5aqievz65n7yrr
+  Is Manager: true
+  ClusterID: qpxgoqfujn4nx9im9dxdlyndy
+  Managers: 1
+  Nodes: 4
+  Default Address Pool: 10.0.0.0/8  
+  SubnetSize: 24
+  Data Path Port: 4789
+  Orchestration:
+   Task History Retention Limit: 5
+  Raft:
+   Snapshot Interval: 10000
+   Number of Old Snapshots to Retain: 0
+   Heartbeat Tick: 1
+   Election Tick: 10
+  Dispatcher:
+   Heartbeat Period: 5 seconds
+  CA Configuration:
+   Expiry Duration: 3 months
+   Force Rotate: 0
+  Autolock Managers: false
+  Root Rotation In Progress: false
+  Node Address: 192.168.99.100
+  Manager Addresses:
+   192.168.99.100:2377
+ Runtimes: runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: 7ad184331fa3e55e52b890ea95e65ba581ae3429
+ runc version: dc9208a3303feef5b3839f4323d9beb36df0a9dd
+ init version: fec3683
+ Security Options:
+  seccomp
+   Profile: default
+ Kernel Version: 4.19.130-boot2docker
+ Operating System: Boot2Docker 19.03.12 (TCL 10.1)
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 1
+ Total Memory: 985.4MiB
+ Name: mgr1
+ ID: 27Y2:VPKZ:NG46:WN55:X6TC:W32L:MLCX:ZML6:P5ZA:BMNC:IJVJ:XB2J
+ Docker Root Dir: /mnt/sda1/var/lib/docker
+ Debug Mode: false
+ Registry: https://index.docker.io/v1/
+ Labels:
+  provider=virtualbox
+ Experimental: false
+ Insecure Registries:
+  127.0.0.0/8
+ Live Restore Enabled: false
+ Product License: Community Engine
+
+docker@mgr1:~$ docker version                                                                                                             
+Client: Docker Engine - Community
+ Version:           19.03.12
+ API version:       1.40
+ Go version:        go1.13.10
+ Git commit:        48a66213fe
+ Built:             Mon Jun 22 15:42:53 2020
+ OS/Arch:           linux/amd64
+ Experimental:      false
+
+Server: Docker Engine - Community
+ Engine:
+  Version:          19.03.12
+  API version:      1.40 (minimum version 1.12)
+  Go version:       go1.13.10
+  Git commit:       48a66213fe
+  Built:            Mon Jun 22 15:49:35 2020
+  OS/Arch:          linux/amd64
+  Experimental:     false
+ containerd:
+  Version:          v1.2.13
+  GitCommit:        7ad184331fa3e55e52b890ea95e65ba581ae3429
+ runc:
+  Version:          1.0.0-rc10
+  GitCommit:        dc9208a3303feef5b3839f4323d9beb36df0a9dd
+ docker-init:
+  Version:          0.18.0
+  GitCommit:        fec3683
+docker@mgr1:~$ docker ps                                                                                                                  
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+docker@mgr1:~$ docker images                                                                                                              
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker@mgr1:~$ docker swarm                                                                                                               
+
+Usage:	docker swarm COMMAND
+
+Manage Swarm
+
+Commands:
+  ca          Display and rotate the root CA
+  init        Initialize a swarm
+  join        Join a swarm as a node and/or manager
+  join-token  Manage join tokens
+  leave       Leave the swarm
+  unlock      Unlock swarm
+  unlock-key  Manage the unlock key
+  update      Update the swarm
+
+Run 'docker swarm COMMAND --help' for more information on a command.
+docker@mgr1:~$ docker service create --replicas 3 -port 80:80 --name nginx nginx                                                          
+invalid argument "ort" for "-p, --publish" flag: Invalid containerPort: ort
+See 'docker service create --help'.
+docker@mgr1:~$ docker service create --replicas 3 -p 80:80 --name nginx nginx                                                             
+8os7oh3gboo9cr9q7ulov9vbl
+overall progress: 3 out of 3 tasks 
+1/3: running   [==================================================>] 
+2/3: running   [==================================================>] 
+3/3: running   [==================================================>] 
+verify: Service converged 
+docker@mgr1:~$ docker service ls                                                                                                          
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+8os7oh3gboo9        nginx               replicated          3/3                 nginx:latest        *:80->80/tcp
+docker@mgr1:~$ pwd                                                                                                                        
+/home/docker
+docker@mgr1:~$ docker service scale nginx=5                                                                                               
+nginx scaled to 5
+overall progress: 5 out of 5 tasks 
+1/5: running   [==================================================>] 
+2/5: running   [==================================================>] 
+3/5: running   [==================================================>] 
+4/5: running   [==================================================>] 
+5/5: running   [==================================================>] 
+verify: Service converged 
+docker@mgr1:~$ docker service ls                                                                                                          
+ID                  NAME                MODE                REPLICAS            IMAGE               PORTS
+8os7oh3gboo9        nginx               replicated          5/5                 nginx:latest        *:80->80/tcp
+docker@mgr1:~$ docker service ps                                                                                                          
+"docker service ps" requires at least 1 argument.
+See 'docker service ps --help'.
+
+Usage:  docker service ps [OPTIONS] SERVICE [SERVICE...]
+
+List the tasks of one or more services
+docker@mgr1:~$ docker service ps mgr1                                                                                                     
+no such service: mgr1
+docker@mgr1:~$ docker service ps nginx                                                                                                    
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE            ERROR               PORTS
+8sb8syemh0n9        nginx.1             nginx:latest        mgr1                Running             Running 3 minutes ago                        
+niuzcc6s2bek        nginx.2             nginx:latest        wrkr1               Running             Running 3 minutes ago                        
+kzbxr8f865wt        nginx.3             nginx:latest        wrkr2               Running             Running 3 minutes ago                        
+ysk4m2t5r16e        nginx.4             nginx:latest        wrkr3               Running             Running 40 seconds ago                       
+fligze3ujcw5        nginx.5             nginx:latest        wrkr3               Running             Running 40 seconds ago                       
+docker@mgr1:~$ docker service scale nginx=2                                                                                               
+nginx scaled to 2
+overall progress: 2 out of 2 tasks 
+1/2: running   [==================================================>] 
+2/2: running   [==================================================>] 
+verify: Service converged 
+docker@mgr1:~$ docker service ps nginx                                                                                                    
+ID                  NAME                IMAGE               NODE                DESIRED STATE       CURRENT STATE           ERROR               PORTS
+8sb8syemh0n9        nginx.1             nginx:latest        mgr1                Running             Running 4 minutes ago                       
+niuzcc6s2bek        nginx.2             nginx:latest        wrkr1               Running             Running 4 minutes ago                       
+docker@mgr1:~$ docker inspect mgr1                                                                                                        
+[
+    {
+        "ID": "nkrzsres16o5aqievz65n7yrr",
+        "Version": {
+            "Index": 9
+        },
+        "CreatedAt": "2020-07-07T16:30:17.334060745Z",
+        "UpdatedAt": "2020-07-07T16:30:17.891532796Z",
+        "Spec": {
+            "Labels": {},
+            "Role": "manager",
+            "Availability": "active"
+        },
+        "Description": {
+            "Hostname": "mgr1",
+            "Platform": {
+                "Architecture": "x86_64",
+                "OS": "linux"
+            },
+            "Resources": {
+                "NanoCPUs": 1000000000,
+                "MemoryBytes": 1033252864
+            },
+            "Engine": {
+                "EngineVersion": "19.03.12",
+                "Labels": {
+                    "provider": "virtualbox"
+                },
+                "Plugins": [
+                    {
+                        "Type": "Log",
+                        "Name": "awslogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "fluentd"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gcplogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gelf"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "journald"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "json-file"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "local"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "logentries"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "splunk"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "syslog"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "bridge"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "host"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "ipvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "macvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "null"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "overlay"
+                    },
+                    {
+                        "Type": "Volume",
+                        "Name": "local"
+                    }
+                ]
+            },
+            "TLSInfo": {
+                "TrustRoot": "-----BEGIN CERTIFICATE-----\nMIIBaTCCARCgAwIBAgIUCRvXQQzvXz4McZN34G6MiZqnrpgwCgYIKoZIzj0EAwIw\nEzERMA8GA1UEAxMIc3dhcm0tY2EwHhcNMjAwNzA3MTYyNTAwWhcNNDAwNzAyMTYy\nNTAwWjATMREwDwYDVQQDEwhzd2FybS1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABEQt1wbBpyY+UHw08RIehR4PyNAOrkOLo5I7LQPWJeQgwF7DmP56QXd9krqv\n7rOacAuTX2UiifWm/ZiQbhWpmSCjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB\nAf8EBTADAQH/MB0GA1UdDgQWBBQHs4R8F8YRqidUSauSSQC+LdjTFTAKBggqhkjO\nPQQDAgNHADBEAiB2Qr25tG3jndcBC3ToNJYAiEDa7ZrhbmfawxTS5TzKZAIgZ3dd\nbCThxS/3MFkHuXFAlbx6cGV23Qn9vyXcLCHx0XQ=\n-----END CERTIFICATE-----\n",
+                "CertIssuerSubject": "MBMxETAPBgNVBAMTCHN3YXJtLWNh",
+                "CertIssuerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERC3XBsGnJj5QfDTxEh6FHg/I0A6uQ4ujkjstA9Yl5CDAXsOY/npBd32Suq/us5pwC5NfZSKJ9ab9mJBuFamZIA=="
+            }
+        },
+        "Status": {
+            "State": "ready",
+            "Addr": "192.168.99.100"
+        },
+        "ManagerStatus": {
+            "Leader": true,
+            "Reachability": "reachable",
+            "Addr": "192.168.99.100:2377"
+        }
+    }
+]
+docker@mgr1:~$ docker inspect wrkr1                                                                                                       
+[
+    {
+        "ID": "vqvzlw84cn7jkmpjxmijh5ha9",
+        "Version": {
+            "Index": 15
+        },
+        "CreatedAt": "2020-07-07T16:32:21.946311132Z",
+        "UpdatedAt": "2020-07-07T16:32:22.035929124Z",
+        "Spec": {
+            "Labels": {},
+            "Role": "worker",
+            "Availability": "active"
+        },
+        "Description": {
+            "Hostname": "wrkr1",
+            "Platform": {
+                "Architecture": "x86_64",
+                "OS": "linux"
+            },
+            "Resources": {
+                "NanoCPUs": 1000000000,
+                "MemoryBytes": 1033252864
+            },
+            "Engine": {
+                "EngineVersion": "19.03.12",
+                "Labels": {
+                    "provider": "virtualbox"
+                },
+                "Plugins": [
+                    {
+                        "Type": "Log",
+                        "Name": "awslogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "fluentd"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gcplogs"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "gelf"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "journald"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "json-file"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "local"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "logentries"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "splunk"
+                    },
+                    {
+                        "Type": "Log",
+                        "Name": "syslog"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "bridge"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "host"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "ipvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "macvlan"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "null"
+                    },
+                    {
+                        "Type": "Network",
+                        "Name": "overlay"
+                    },
+                    {
+                        "Type": "Volume",
+                        "Name": "local"
+                    }
+                ]
+            },
+            "TLSInfo": {
+                "TrustRoot": "-----BEGIN CERTIFICATE-----\nMIIBaTCCARCgAwIBAgIUCRvXQQzvXz4McZN34G6MiZqnrpgwCgYIKoZIzj0EAwIw\nEzERMA8GA1UEAxMIc3dhcm0tY2EwHhcNMjAwNzA3MTYyNTAwWhcNNDAwNzAyMTYy\nNTAwWjATMREwDwYDVQQDEwhzd2FybS1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABEQt1wbBpyY+UHw08RIehR4PyNAOrkOLo5I7LQPWJeQgwF7DmP56QXd9krqv\n7rOacAuTX2UiifWm/ZiQbhWpmSCjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB\nAf8EBTADAQH/MB0GA1UdDgQWBBQHs4R8F8YRqidUSauSSQC+LdjTFTAKBggqhkjO\nPQQDAgNHADBEAiB2Qr25tG3jndcBC3ToNJYAiEDa7ZrhbmfawxTS5TzKZAIgZ3dd\nbCThxS/3MFkHuXFAlbx6cGV23Qn9vyXcLCHx0XQ=\n-----END CERTIFICATE-----\n",
+                "CertIssuerSubject": "MBMxETAPBgNVBAMTCHN3YXJtLWNh",
+                "CertIssuerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAERC3XBsGnJj5QfDTxEh6FHg/I0A6uQ4ujkjstA9Yl5CDAXsOY/npBd32Suq/us5pwC5NfZSKJ9ab9mJBuFamZIA=="
+            }
+        },
+        "Status": {
+            "State": "ready",
+            "Addr": "192.168.99.101"
+        }
+    }
+]
+docker@mgr1:~$ exit status 255                                                                                                            
+don-IV $ docker-machine ps
+docker-machine: 'ps' is not a docker-machine command. See 'docker-machine --help'.
+don-IV $ docker-machine ls
+NAME    ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER      ERRORS
+mgr1    -        virtualbox   Running   tcp://192.168.99.100:2376           v19.03.12   
+wrkr1   -        virtualbox   Running   tcp://192.168.99.101:2376           v19.03.12   
+wrkr2   -        virtualbox   Running   tcp://192.168.99.102:2376           v19.03.12   
+wrkr3   -        virtualbox   Running   tcp://192.168.99.103:2376           v19.03.12   
+don-IV $                  

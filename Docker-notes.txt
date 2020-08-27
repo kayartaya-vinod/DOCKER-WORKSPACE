@@ -1,0 +1,61 @@
+List of commands used on the day 1:
+
+1. docker run hell-world
+2. docker run busybox echo hi there
+3. docker run busybox ping vinod.co
+4. docker pull hello-world
+5. docker create hello-world
+6. docker start <container-id>
+7. docker stop <container-id>
+8. docker kill <container-id>
+9. docker system prune
+10. docker ps
+11. docker ps --all
+12. docker image rm <image-id>
+13. docker image rm -f <image-id>
+14. docker rmi -f <image-id>
+15. docker container rm <container-id>
+16. docker logs <container-id>
+
+
+-------------------------------------------------------------------------------------------
+
+# Remove all containers forcefully:
+docker rm -f $(docker ps -aq)
+
+-------------------------------------------------------------------------------------------
+
+# Running mondogb server on a bridge network (default) 
+# and connecting to the same via a client using the --link option
+
+# Server:
+docker run -d -p 27017:27017 --name=mongo-server mongo
+
+# Client:
+docker run -it --link=mongo-server --name=mongo-client mongo mongo --host=mongo-server
+
+-------------------------------------------------------------------------------------------
+
+# Running mondogb server on the host network and connecting to the same via a client
+
+docker run -d --network=host --name=mongo-server mongo
+docker run -it --network=host --name=mongo-client mongo mongo
+
+When using host networks, there is no need to bind the exposed port number, in order to access
+the server from the client. However, the "host" here is not the host OS (like macOS), but 
+the underlying Linux/Docker network. If you want to access the server from your host OS, then
+the host_port:container_port must be mapped.
+
+-------------------------------------------------------------------------------------------
+
+# Running mondogb server on a custom network and connecting to the same via a client
+
+# Create the network:
+docker network create example-network
+
+# Start the server on the above network
+docker run -d --network=example-network --name=mongo-server mongo
+
+# Start the client to connect to the above server via the name
+docker run -it --network=example-network --name=mongo-client mongo mongo --host=mongo-server
+
